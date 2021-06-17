@@ -98,6 +98,40 @@ public class MedicacaoDAO {
             
             String sql= "SELECT * FROM Medicacao";
             PreparedStatement stmt = con.prepareStatement(sql);
+            
+            ResultSet rs=stmt.executeQuery();
+            
+            while(rs.next()){
+                Medicacao medicacao = new Medicacao();
+                
+                medicacao.setId(rs.getInt("idmedicacao"));
+                
+                medicacao.setNome(rs.getString("nome"));
+                medicacao.setQuantidade(rs.getInt("qtd"));
+                medicacao.setValor(rs.getInt("valor"));
+                
+                Funcionario funcionario = new Funcionario();
+                funcionario.setCrmv(rs.getInt("funcionario_crmv"));
+                medicacao.setFuncionario(funcionario);
+                
+                Animal animal= new Animal();
+                animal.setId(rs.getInt("animal_idanimal"));
+                medicacao.setAnimal(animal);
+                lista.add(medicacao);
+            }
+            return lista;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro " +e);
+            return null;
+        }
+    }
+    public List<Medicacao>  listarMedicacaoporNome(String nome){
+        try {
+            List<Medicacao>lista= new ArrayList<>();
+            
+            String sql= "SELECT * FROM Medicacao";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nome);
             ResultSet rs=stmt.executeQuery();
             
             while(rs.next()){

@@ -95,6 +95,35 @@ public class AnimalDAO {
             
             String sql= "SELECT * FROM animal";
             PreparedStatement stmt = con.prepareStatement(sql);
+          
+            ResultSet rs=stmt.executeQuery();
+            
+            while(rs.next()){
+                Animal animal= new Animal();
+                Cliente cliente = new Cliente();
+                
+                animal.setId(rs.getInt("idanimal"));
+                animal.setTipo(rs.getString("tipo"));
+                animal.setNome(rs.getString("nome"));              
+                animal.setRaca(rs.getString("raca"));
+                cliente.setCpf(rs.getInt("cliente_cpf"));
+                animal.setCliente(cliente);
+                                               
+                lista.add(animal);
+            }
+            return lista;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro " +e);
+            return null;
+        }
+    }
+    public List<Animal>  listarAnimalPorNome(String nome){
+        try {
+            List<Animal>lista= new ArrayList<>();
+            
+            String sql= "SELECT * FROM animal WHERE nome LIKE ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nome);
             ResultSet rs=stmt.executeQuery();
             
             while(rs.next()){

@@ -1,6 +1,6 @@
 package teste;
 
-import DAO.AnimalDAO;
+
 import DAO.MedicacaoDAO;
 import java.util.ArrayList;
 import java.util.List;

@@ -113,5 +113,30 @@ public class FuncionarioDAO {
             JOptionPane.showMessageDialog(null, "Erro " +e);
             return null;
         }
+    }public List<Funcionario>  buscarFuncionarioPorNome(String nome){
+        try {
+            List<Funcionario>lista= new ArrayList<>();
+            
+            String sql= "SELECT * FROM funcionario WHERE nome like ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nome);
+            ResultSet rs=stmt.executeQuery();
+            
+            while(rs.next()){
+                Funcionario funcionario = new Funcionario();
+                
+                funcionario.setCrmv(rs.getInt("crmv"));
+                funcionario.setIdade(rs.getInt("idade"));
+                funcionario.setSalario(rs.getDouble("salario"));
+                funcionario.setNome(rs.getString("nome"));
+                funcionario.setCargo(rs.getString("cargo"));
+                                
+                lista.add(funcionario);
+            }
+            return lista;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro " +e);
+            return null;
+        }
     }
 }

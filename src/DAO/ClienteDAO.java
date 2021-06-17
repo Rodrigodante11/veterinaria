@@ -114,4 +114,34 @@ public class ClienteDAO {
             return null;
         }
     }
+    
+    public List<Cliente>  listarClientePorNome(String nome){
+        try {
+            List<Cliente>lista= new ArrayList<>();
+            
+            String sql= "SELECT * FROM cliente WHERE nome like ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nome);
+            ResultSet rs=stmt.executeQuery();
+            
+            while(rs.next()){
+                Funcionario funcionario= new Funcionario();
+                Cliente cliente = new Cliente();
+                cliente.setCpf(rs.getInt("cpf"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setTelefone(rs.getString("telefone"));
+                cliente.setEndereco(rs.getString("endereco"));
+                funcionario.setCrmv(rs.getInt("funcionario_crmv"));
+                cliente.setFuncionario(funcionario);
+                                               
+                lista.add(cliente);
+            }
+            return lista;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro " +e);
+            return null;
+        }
+    }
+    
+    
 }
