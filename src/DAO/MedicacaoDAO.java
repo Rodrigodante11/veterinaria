@@ -129,7 +129,7 @@ public class MedicacaoDAO {
         try {
             List<Medicacao>lista= new ArrayList<>();
             
-            String sql= "SELECT * FROM Medicacao";
+            String sql= "SELECT * FROM Medicacao WHERE nome like ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, nome);
             ResultSet rs=stmt.executeQuery();

@@ -5,12 +5,14 @@
  */
 package view;
 
-import DAO.AnimalDAO;
 
+import DAO.MedicacaoDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import model.Animal;
-import model.Cliente;
+
+import model.Funcionario;
+import model.Medicacao;
 import model.Utilitarios;
 
 
@@ -18,18 +20,19 @@ public class MedicacaoView extends javax.swing.JFrame {
 
     //metodo listar na tabela
     public void listar(){
-        AnimalDAO animalDAO= new AnimalDAO();
-        List<Animal>lista=animalDAO.listarAnimal();
-        DefaultTableModel dados=(DefaultTableModel) tabelaAnimal.getModel();
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        List<Medicacao>lista=MedicacaoDAO.listarMedicacao();
+        DefaultTableModel dados=(DefaultTableModel) tabelaMedicacao.getModel();
         dados.setNumRows(0);
         
-        lista.forEach(animal -> {
+        lista.forEach(medicacao -> {
             dados.addRow(new Object[]{
-                animal.getId(),
-                animal.getTipo(),
-                animal.getNome(),
-                animal.getRaca(),
-                animal.getCliente().getCpf(),              
+                medicacao.getId(),
+                medicacao.getNome(),
+                medicacao.getQuantidade(),
+                medicacao.getValor(),
+                medicacao.getFuncionario().getCrmv(),
+                medicacao.getAnimal().getId(),              
             });
         });
         
@@ -52,21 +55,23 @@ public class MedicacaoView extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         painelDados = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTFDonoCpf = new javax.swing.JTextField();
+        jTFAnimalId = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTFNome = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTFTipo = new javax.swing.JTextField();
+        jTFQtd = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTFRaca = new javax.swing.JTextField();
+        jTFValor = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTFidAnimal = new javax.swing.JTextField();
+        jTFidMedicacao = new javax.swing.JTextField();
+        jTFFuncionaCrmv = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
         painelConsulta = new javax.swing.JPanel();
         ButtonPesquisar2 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jTFPesquisa = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaAnimal = new javax.swing.JTable();
+        tabelaMedicacao = new javax.swing.JTable();
         ButtonSalvar = new javax.swing.JButton();
         ButtonExcluir = new javax.swing.JButton();
         ButtonEditar = new javax.swing.JButton();
@@ -84,7 +89,7 @@ public class MedicacaoView extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 48)); // NOI18N
-        jLabel1.setText("Animal");
+        jLabel1.setText("Medicação receitada");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -92,7 +97,7 @@ public class MedicacaoView extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -104,11 +109,11 @@ public class MedicacaoView extends javax.swing.JFrame {
         );
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel2.setText("idAnimal");
+        jLabel2.setText("idMedicação");
 
-        jTFDonoCpf.addActionListener(new java.awt.event.ActionListener() {
+        jTFAnimalId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTFDonoCpfActionPerformed(evt);
+                jTFAnimalIdActionPerformed(evt);
             }
         });
 
@@ -122,19 +127,28 @@ public class MedicacaoView extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel4.setText("Tipo");
+        jLabel4.setText("Quantidade:");
 
         jLabel5.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel5.setText("Raça");
+        jLabel5.setText("Valor:");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel6.setText("Dono Cpf:");
+        jLabel6.setText("Animal id");
 
-        jTFidAnimal.addActionListener(new java.awt.event.ActionListener() {
+        jTFidMedicacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTFidAnimalActionPerformed(evt);
+                jTFidMedicacaoActionPerformed(evt);
             }
         });
+
+        jTFFuncionaCrmv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTFFuncionaCrmvActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel7.setText("Funcionario receito");
 
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
@@ -144,56 +158,63 @@ public class MedicacaoView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTFRaca, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
-                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTFQtd, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(painelDadosLayout.createSequentialGroup()
                             .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
-                            .addComponent(jLabel4)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTFTipo))
-                        .addGroup(painelDadosLayout.createSequentialGroup()
+                            .addComponent(jTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelDadosLayout.createSequentialGroup()
                             .addGap(3, 3, 3)
                             .addComponent(jLabel2)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTFidAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(39, 39, 39)
-                .addComponent(jLabel6)
+                            .addComponent(jTFidMedicacao, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTFValor, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTFDonoCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTFAnimalId, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFFuncionaCrmv, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         painelDadosLayout.setVerticalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
+                .addGap(110, 110, 110)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTFValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)))
+            .addGroup(painelDadosLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTFidAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTFidMedicacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7)
+                        .addComponent(jTFFuncionaCrmv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTFDonoCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel4)
+                            .addComponent(jTFQtd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(painelDadosLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTFTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTFNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(11, 11, 11)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTFRaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addContainerGap(98, Short.MAX_VALUE))
+                            .addComponent(jTFAnimalId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))))
         );
 
         jTabbedPane1.addTab("Daddos Cliente", painelDados);
@@ -214,20 +235,20 @@ public class MedicacaoView extends javax.swing.JFrame {
             }
         });
 
-        tabelaAnimal.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaMedicacao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "idAnimal", "Tipo", "Nome", "Raça", "Dono cpf"
+                "idMedicacao", "Nome", "Quantidade", "Valor", "Funcionario receitou", "Id Animal"
             }
         ));
-        tabelaAnimal.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelaMedicacao.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelaAnimalMouseClicked(evt);
+                tabelaMedicacaoMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tabelaAnimal);
+        jScrollPane1.setViewportView(tabelaMedicacao);
 
         javax.swing.GroupLayout painelConsultaLayout = new javax.swing.GroupLayout(painelConsulta);
         painelConsulta.setLayout(painelConsultaLayout);
@@ -240,7 +261,7 @@ public class MedicacaoView extends javax.swing.JFrame {
                 .addComponent(jTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ButtonPesquisar2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(286, Short.MAX_VALUE))
+                .addContainerGap(372, Short.MAX_VALUE))
             .addGroup(painelConsultaLayout.createSequentialGroup()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
@@ -253,7 +274,7 @@ public class MedicacaoView extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jTFPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ButtonPesquisar2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -291,11 +312,11 @@ public class MedicacaoView extends javax.swing.JFrame {
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(82, 82, 82)
+                .addGap(118, 118, 118)
                 .addComponent(ButtonSalvar)
-                .addGap(28, 28, 28)
+                .addGap(52, 52, 52)
                 .addComponent(ButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(65, 65, 65)
                 .addComponent(ButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -322,24 +343,28 @@ public class MedicacaoView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTFDonoCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFDonoCpfActionPerformed
+    private void jTFAnimalIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFAnimalIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTFDonoCpfActionPerformed
+    }//GEN-LAST:event_jTFAnimalIdActionPerformed
 
     private void ButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSalvarActionPerformed
         // Botao Salvar
 
-        Animal animal=new Animal();
-        animal.setId(Integer.parseInt(jTFidAnimal.getText()));
-        animal.setNome(jTFNome.getText());
-        animal.setTipo(jTFTipo.getText());
-        animal.setRaca(jTFRaca.getText());
+        Medicacao medicacao=new Medicacao();
+        medicacao.setId(Integer.parseInt(jTFidMedicacao.getText()));
+        medicacao.setNome(jTFNome.getText());
+        medicacao.setQuantidade(Integer.parseInt(jTFQtd.getText()));
+        medicacao.setValor(Double.parseDouble(jTFValor.getText()));
         
-        Cliente cliente=new Cliente();
-        cliente.setCpf(Integer.parseInt(jTFDonoCpf.getText()));
-        animal.setCliente(cliente);
-        AnimalDAO animalDAO= new AnimalDAO();
-        animalDAO.cadastrarAnimal(animal);
+        Animal animal=new Animal();
+        animal.setId(Integer.parseInt(jTFAnimalId.getText()));
+        medicacao.setAnimal(animal);
+        
+        Funcionario funcionario=new Funcionario();
+        funcionario.setCrmv(Integer.parseInt(jTFFuncionaCrmv.getText()));
+        medicacao.setFuncionario(funcionario);
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        MedicacaoDAO.cadastrarMedicacao(medicacao);
         
         new Utilitarios().LimpaTela(painelDados);
         
@@ -347,11 +372,11 @@ public class MedicacaoView extends javax.swing.JFrame {
 
     private void ButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExcluirActionPerformed
         
-        Animal animal=new Animal();
-        animal.setId(Integer.parseInt(jTFidAnimal.getText()));
+        Medicacao medicacao=new Medicacao();
+        medicacao.setId(Integer.parseInt(jTFidMedicacao.getText()));
                
-        AnimalDAO animalDAO= new AnimalDAO();
-        animalDAO.excluirAnimal(animal);
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        MedicacaoDAO.excluirMedicacao(medicacao);
         new Utilitarios().LimpaTela(painelDados);
         
     }//GEN-LAST:event_ButtonExcluirActionPerformed
@@ -361,33 +386,38 @@ public class MedicacaoView extends javax.swing.JFrame {
         listar();
     }//GEN-LAST:event_formWindowActivated
 
-    private void tabelaAnimalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaAnimalMouseClicked
+    private void tabelaMedicacaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMedicacaoMouseClicked
         // clicando na tabela e pegando osdados da tabela
         
         jTabbedPane1.setSelectedIndex(0); //indo pra outra aba
-        jTFidAnimal.setText(tabelaAnimal.getValueAt(tabelaAnimal.getSelectedRow(), 0).toString()); //pegando a linha selecionada
-        jTFNome.setText(tabelaAnimal.getValueAt(tabelaAnimal.getSelectedRow(), 1).toString()); //pegando a linha selecionada
-        jTFTipo.setText(tabelaAnimal.getValueAt(tabelaAnimal.getSelectedRow(), 2).toString()); //pegando a linha selecionada
-        jTFRaca.setText(tabelaAnimal.getValueAt(tabelaAnimal.getSelectedRow(), 3).toString()); //pegando a linha selecionada
-        jTFDonoCpf.setText(tabelaAnimal.getValueAt(tabelaAnimal.getSelectedRow(), 4).toString()); //pegando a linha selecionada
+        jTFidMedicacao.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 0).toString()); //pegando a linha selecionada
+        jTFNome.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 1).toString()); //pegando a linha selecionada
+        jTFQtd.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 2).toString()); //pegando a linha selecionada
+        jTFValor.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 3).toString()); //pegando a linha selecionada
+        jTFFuncionaCrmv.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 4).toString()); //pegando a linha selecionada
+        jTFAnimalId.setText(tabelaMedicacao.getValueAt(tabelaMedicacao.getSelectedRow(), 5).toString()); //pegando a linha selecionada
         
-    }//GEN-LAST:event_tabelaAnimalMouseClicked
+    }//GEN-LAST:event_tabelaMedicacaoMouseClicked
 
     private void ButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditarActionPerformed
         // Botão editar
         
-        Animal animal=new Animal();
-        animal.setId(Integer.parseInt(jTFidAnimal.getText()));
-        animal.setNome(jTFNome.getText());
-        animal.setTipo(jTFTipo.getText());
-        animal.setRaca(jTFRaca.getText());
+        Medicacao medicacao=new Medicacao();
+        medicacao.setId(Integer.parseInt(jTFidMedicacao.getText()));
+        medicacao.setNome(jTFNome.getText());
+        medicacao.setQuantidade(Integer.parseInt(jTFQtd.getText()));
+        medicacao.setValor(Double.parseDouble(jTFValor.getText()));
         
-        Cliente cliente= new Cliente();
-        cliente.setCpf(Integer.parseInt(jTFDonoCpf.getText()));
-        animal.setCliente(cliente);
+        Animal animal= new Animal();
+        animal.setId(Integer.parseInt(jTFAnimalId.getText()));
+        medicacao.setAnimal(animal);
         
-        AnimalDAO animalDAO= new AnimalDAO();
-        animalDAO.alterarAnimal(animal);
+        Funcionario funcionario=new Funcionario();
+        funcionario.setCrmv(Integer.parseInt(jTFFuncionaCrmv.getText()));
+        medicacao.setFuncionario(funcionario);
+        
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        MedicacaoDAO.alterarMedicacao(medicacao);
         
         new Utilitarios().LimpaTela(painelDados);
         
@@ -398,18 +428,19 @@ public class MedicacaoView extends javax.swing.JFrame {
         
         String nome= "%"+jTFPesquisa.getText()+ "%";  //pegando o nome digitado e colocando na string
         
-        AnimalDAO animalDAO= new AnimalDAO();
-        List<Animal>lista=animalDAO.listarAnimalPorNome(nome);
-        DefaultTableModel dados=(DefaultTableModel) tabelaAnimal.getModel();
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        List<Medicacao>lista=MedicacaoDAO.listarMedicacaoporNome(nome);
+        DefaultTableModel dados=(DefaultTableModel) tabelaMedicacao.getModel();
         dados.setNumRows(0);
         
-        lista.forEach(animal -> {
+        lista.forEach(medicacao -> {
             dados.addRow(new Object[]{
-                animal.getId(),
-                animal.getTipo(),
-                animal.getNome(),
-                animal.getRaca(),
-                animal.getCliente().getCpf(),              
+                medicacao.getId(),
+                medicacao.getNome(),
+                medicacao.getQuantidade(),
+                medicacao.getValor(),
+                medicacao.getFuncionario().getCrmv(),
+                medicacao.getAnimal().getId(),              
             });
         });
     }//GEN-LAST:event_ButtonPesquisar2ActionPerformed
@@ -419,18 +450,18 @@ public class MedicacaoView extends javax.swing.JFrame {
        
         String nome= "%"+jTFPesquisa.getText()+ "%";  //pegando o nome digitado e colocando na string
         
-        AnimalDAO animalDAO= new AnimalDAO();
-        List<Animal>lista=animalDAO.listarAnimalPorNome(nome);
-        DefaultTableModel dados=(DefaultTableModel) tabelaAnimal.getModel();
+        MedicacaoDAO MedicacaoDAO= new MedicacaoDAO();
+        List<Medicacao>lista=MedicacaoDAO.listarMedicacaoporNome(nome);
+        DefaultTableModel dados=(DefaultTableModel) tabelaMedicacao.getModel();
         dados.setNumRows(0);
         
-        lista.forEach(animal -> {
+        lista.forEach(medicacao -> {
             dados.addRow(new Object[]{
-                animal.getId(),
-                animal.getTipo(),
-                animal.getNome(),
-                animal.getRaca(),
-                animal.getCliente().getCpf(),              
+                medicacao.getId(),
+                medicacao.getNome(),
+                medicacao.getQuantidade(),
+                medicacao.getFuncionario().getCrmv(),
+                medicacao.getAnimal().getId(),              
             });
         });
     }//GEN-LAST:event_jTFPesquisaKeyPressed
@@ -439,9 +470,13 @@ public class MedicacaoView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTFNomeActionPerformed
 
-    private void jTFidAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFidAnimalActionPerformed
+    private void jTFidMedicacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFidMedicacaoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTFidAnimalActionPerformed
+    }//GEN-LAST:event_jTFidMedicacaoActionPerformed
+
+    private void jTFFuncionaCrmvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFFuncionaCrmvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTFFuncionaCrmvActionPerformed
 
     /**
      * @param args the command line arguments
@@ -496,18 +531,20 @@ public class MedicacaoView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTFDonoCpf;
+    private javax.swing.JTextField jTFAnimalId;
+    private javax.swing.JTextField jTFFuncionaCrmv;
     private javax.swing.JTextField jTFNome;
     private javax.swing.JTextField jTFPesquisa;
-    private javax.swing.JTextField jTFRaca;
-    private javax.swing.JTextField jTFTipo;
-    private javax.swing.JTextField jTFidAnimal;
+    private javax.swing.JTextField jTFQtd;
+    private javax.swing.JTextField jTFValor;
+    private javax.swing.JTextField jTFidMedicacao;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel painelConsulta;
     private javax.swing.JPanel painelDados;
-    private javax.swing.JTable tabelaAnimal;
+    private javax.swing.JTable tabelaMedicacao;
     // End of variables declaration//GEN-END:variables
 }
