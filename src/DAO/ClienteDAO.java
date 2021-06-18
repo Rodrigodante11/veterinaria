@@ -114,7 +114,6 @@ public class ClienteDAO {
             return null;
         }
     }
-    
     public List<Cliente>  listarClientePorNome(String nome){
         try {
             List<Cliente>lista= new ArrayList<>();
@@ -142,6 +141,8 @@ public class ClienteDAO {
             return null;
         }
     }
+    
+    
     
     
 }
